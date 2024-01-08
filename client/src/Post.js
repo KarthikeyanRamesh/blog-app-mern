@@ -2,7 +2,7 @@ import {formatISO9075} from 'date-fns';
 import { Link } from 'react-router-dom';
 
 export default function Post({_id, title, summary, cover, content, createdAt, author}) {
-  const imgSrc = 'http://localhost:4000/'+cover; 
+  const imgSrc = `${process.env.REACT_APP_SERVERURL}/`+cover; 
  
   return (
         <div className='post'>
