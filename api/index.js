@@ -103,6 +103,14 @@ app.get("/post/:id", async (req, res) => {
   res.json(postDoc);
 })
 
+app.get('/', (req, res) => {
+  res.json('hello world!');
+})
+
+app.get('/testendpoint', (req, res) => {
+  res.json('test get endpoint working fine');
+})
+
 app.listen(4000, () => {
   console.log("running node server at http://localhost:4000");
 });
