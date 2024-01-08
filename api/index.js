@@ -14,9 +14,8 @@ const app = express();
 
 const salt = bcrypt.genSaltSync(10);
 const secret = "iuhods00800whlsg@$%84khjufuhs-=";
-const temp = process.env.new_var;
-console.log('\n\n consoling temp: \n\n');
-console.log(temp);
+console.log('\n\n consoling mongouri: \n\n');
+console.log(process.env.MONGODB_URI);
 app.use(cors({ credentials: true, origin: "http://localhost:3000" }));
 app.use(express.json());
 app.use(cookieParser());
