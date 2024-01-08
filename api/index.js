@@ -16,7 +16,7 @@ const salt = bcrypt.genSaltSync(10);
 const secret = "iuhods00800whlsg@$%84khjufuhs-=";
 console.log('\n\n consoling mongouri: \n\n');
 console.log(process.env.MONGODB_URI);
-app.use(cors({ credentials: true, origin: "https://mern-blog-app-lvl4.onrender.com/" }));
+app.use(cors({ credentials: true, origin: "https://mern-blog-app-lvl4.onrender.com" }));
 app.use(express.json());
 app.use(cookieParser());
 app.use('/uploads', express.static(__dirname + '/uploads'));
