@@ -16,7 +16,7 @@ const salt = bcrypt.genSaltSync(10);
 const secret = "iuhods00800whlsg@$%84khjufuhs-=";
 console.log('\n\n consoling mongouri: \n\n');
 console.log(process.env.MONGODB_URI);
-app.use(cors({ credentials: true, origin: "https://mern-blog-app-lvl4.onrender.com" }));
+app.use(cors({ credentials: true, origin: ["https://mern-blog-app-lvl4.onrender.com", "http://localhost:3000"] }));
 app.use(express.json());
 app.use(cookieParser());
 app.use('/uploads', express.static(__dirname + '/uploads'));
@@ -43,7 +43,7 @@ app.post("/login", async (req, res) => {
   if (passOk) {
     jwt.sign({ username, id: userDoc.id }, secret, {}, (err, token) => {
       if (err) throw err;
-      res.cookie("token", token).json({
+      res.cookie("mbg_token", token).json({
         id: userDoc._id,
         username,
       });
@@ -54,15 +54,15 @@ app.post("/login", async (req, res) => {
 });
 
 app.get("/profile", (req, res) => {
-  const { token } = req.cookies;
-  jwt.verify(token, secret, {}, (err, info) => {
+  const { mbg_token } = req.cookies;
+  jwt.verify(mbg_token, secret, {}, (err, info) => {
     if (err) throw err;
     res.json(info);
   });
 });
 
 app.post("/logout", (req, res) => {
-  res.cookie("token", "").json("ok");
+  res.cookie("mbg_token", "").json("ok");
 });
 
 app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
@@ -71,8 +71,8 @@ app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
   const ext = parts[parts.length - 1];
   const newPath = path + "." + ext;
   fs.renameSync(path, newPath);
-  const { token } = req.cookies;
-  jwt.verify(token, secret, {}, async (err, info) => {
+  const { mbg_token } = req.cookies;
+  jwt.verify(mbg_token, secret, {}, async (err, info) => {
     if (err) throw err;
 
     const { title, summary, content } = req.body;
