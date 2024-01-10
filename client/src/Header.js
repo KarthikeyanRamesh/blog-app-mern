@@ -6,7 +6,7 @@ export default function Header() {
     const {userInfo, setUserInfo} = useContext(UserContext);
     useEffect(() => {
         fetch(`${process.env.REACT_APP_SERVERURL}/profile`, {
-            credentials: 'include'
+            credentials: 'same-origin'
         }).then(response => {
             response.json().then(user => {
                 setUserInfo(user);
@@ -16,7 +16,7 @@ export default function Header() {
 
     function logout() {
         fetch(`${process.env.REACT_APP_SERVERURL}/logout`, {
-            credentials: 'include',
+            credentials: 'same-origin',
             method: 'POST'
         })
         setUserInfo(null);

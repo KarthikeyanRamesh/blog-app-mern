@@ -39,7 +39,7 @@ export default function CreatePost() {
         fetch(`${process.env.REACT_APP_SERVERURL}/post`, {
             method: 'POST',
             body: data,
-            credentials: 'include',
+            credentials: 'same-origin',
         })
       }
     
