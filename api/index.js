@@ -20,6 +20,7 @@ app.use(cors({ credentials: true, origin: ["https://mern-blog-app-lvl4.onrender.
 app.use(express.json());
 app.use(cookieParser());
 app.use('/uploads', express.static(__dirname + '/uploads'));
+app.set("trust proxy", 1);
 
 mongoose.connect(process.env.MONGODB_URI);
 
