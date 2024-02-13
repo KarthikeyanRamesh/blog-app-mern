@@ -8,7 +8,6 @@ export default function IndexPage() {
         fetch(`${process.env.REACT_APP_SERVERURL}/post`).then(response => {
             response.json().then(posts => {
                 setPosts(posts);
-                console.log(posts);
             })
         })
     }, []);
@@ -16,7 +15,7 @@ export default function IndexPage() {
     return (
         <>
         {posts.length > 0 && posts.map(post => (
-            <Post {...post} />
+            <Post key={post._id} {...post} />
         ))}
         </>
     )
