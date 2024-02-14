@@ -53,7 +53,7 @@ app.post("/login", async (req, res) => {
       if (err) throw err;
       res.json({
         token: {
-          id: userDoc._id,
+          id: userDoc.id,
           username,
         },
       });
@@ -85,9 +85,7 @@ app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
     summary,
     content,
     cover: newPath,
-    author: {
-      username: new mongoose.Types.ObjectId(userInfoVal.id)
-    },
+    author: userInfoVal.id
   });
 
   res.json(postDoc);
