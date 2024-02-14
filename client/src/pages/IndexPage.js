@@ -1,23 +1,24 @@
-import {useEffect, useState} from 'react';
+import { useEffect, useState } from "react";
 import Post from "../Post";
+import { useFetch } from "../hooks/useFetch";
 
 export default function IndexPage() {
-    const [posts, setPosts] = useState([]);
+  const { isInProgress, isError, error, data } = useFetch("", () =>
+    fetch(`${process.env.REACT_APP_SERVERURL}/post`)
+  );
 
-    useEffect(() => {
-        fetch(`${process.env.REACT_APP_SERVERURL}/post`).then(response => {
-            response.json().then(posts => {
-                setPosts(posts);
-                console.log(posts);
-            })
-        })
-    }, []);
-
+  if (isError && error) {
+    return <h1> could not fetch the posts.please try again</h1>;
+  } else if (isInProgress) {
+    return <h1>fetching your posts...</h1>;
+  } else {
     return (
-        <>
-        {posts.length > 0 && posts.map(post => (
-            <Post {...post} />
-        ))}
-        </>
-    )
+      <>
+        {data.length > 0 &&
+          data.map((post) => {
+            return <Post key={post._id} {...post} />;
+          })}
+      </>
+    );
+  }
 }
