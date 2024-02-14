@@ -14,12 +14,19 @@ const app = express();
 
 const salt = bcrypt.genSaltSync(10);
 const secret = "iuhods00800whlsg@$%84khjufuhs-=";
-console.log('\n\n consoling mongouri: \n\n');
-console.log(process.env.MONGODB_URI);
-app.use(cors({ credentials: true, origin: ["https://mern-blog-app-lvl4.onrender.com", "http://localhost:3000"] }));
+
+app.use(
+  cors({
+    credentials: true,
+    origin: [
+      "https://mern-blog-app-lvl4.onrender.com",
+      "http://localhost:3000",
+    ],
+  })
+);
 app.use(express.json());
 app.use(cookieParser());
-app.use('/uploads', express.static(__dirname + '/uploads'));
+app.use("/uploads", express.static(__dirname + "/uploads"));
 app.set("trust proxy", 1);
 
 mongoose.connect(process.env.MONGODB_URI);
@@ -44,26 +51,21 @@ app.post("/login", async (req, res) => {
   if (passOk) {
     jwt.sign({ username, id: userDoc.id }, secret, {}, (err, token) => {
       if (err) throw err;
-      res.cookie("mbg_token", token).json({
-        id: userDoc._id,
-        username,
+      res.json({
+        token: {
+          id: userDoc.id,
+          username,
+        },
       });
     });
+    // res.json("ok");
   } else {
     res.status(400).json("wrong credentials");
   }
 });
 
-app.get("/profile", (req, res) => {
-  const { mbg_token } = req.cookies;
-  jwt.verify(mbg_token, secret, {}, (err, info) => {
-    if (err) throw err;
-    res.json(info);
-  });
-});
-
 app.post("/logout", (req, res) => {
-  res.cookie("mbg_token", "").json("ok");
+  res.json("log out successful");
 });
 
 app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
@@ -72,21 +74,21 @@ app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
   const ext = parts[parts.length - 1];
   const newPath = path + "." + ext;
   fs.renameSync(path, newPath);
-  const { mbg_token } = req.cookies;
-  jwt.verify(mbg_token, secret, {}, async (err, info) => {
-    if (err) throw err;
+  // const { mbg_token } = req.cookies;
 
-    const { title, summary, content } = req.body;
-    const postDoc = await Post.create({
-      title,
-      summary,
-      content,
-      cover: newPath,
-      author: info.id,
-    });
+  const { title, summary, content, author, userInfo } = req.body;
 
-    res.json(postDoc);
+  const userInfoVal = JSON.parse(userInfo);
+
+  const postDoc = await Post.create({
+    title,
+    summary,
+    content,
+    cover: newPath,
+    author: userInfoVal.id
   });
+
+  res.json(postDoc);
 });
 
 app.get("/post", async (req, res) => {
@@ -99,18 +101,18 @@ app.get("/post", async (req, res) => {
 });
 
 app.get("/post/:id", async (req, res) => {
-  const {id} = req.params;
+  const { id } = req.params;
   const postDoc = await Post.findById(id).populate("author", ["username"]);
   res.json(postDoc);
-})
+});
 
-app.get('/', (req, res) => {
-  res.json('hello world!');
-})
+app.get("/", (req, res) => {
+  res.json("hello world!");
+});
 
-app.get('/testendpoint', (req, res) => {
-  res.json('test get endpoint working fine');
-})
+app.get("/testendpoint", (req, res) => {
+  res.json("test get endpoint working fine");
+});
 
 app.listen(4000, () => {
   console.log("running node server at http://localhost:4000");
@@ -118,5 +120,3 @@ app.listen(4000, () => {
 
 // LnzXsZkDSXS1RMTc
 // mern_blog
-
-// mongodb+srv://mern_blog:LnzXsZkDSXS1RMTc@cluster0.seosykh.mongodb.net/?retryWrites=true&w=majority

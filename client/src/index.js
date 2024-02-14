@@ -8,8 +8,6 @@ import {BrowserRouter} from 'react-router-dom';
 const root = ReactDOM.createRoot(document.getElementById('root'));
 
 const temp = process.env.REACT_APP_SERVERURL;
-console.log('\n\n print env var: \n\n')
-console.log(temp);
 
 root.render(
   <React.StrictMode>

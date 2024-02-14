@@ -7,21 +7,22 @@ export default function LoginPage() {
   const [password, setPassword] = useState("");
   const [redirect, setRedirect] = useState(false);
 
-  const {setUserInfo} = useContext(UserContext);
+  const { setUserInfo } = useContext(UserContext);
 
   async function login(event) {
-    event.preventDefault(); 
+    event.preventDefault();
     const response = await fetch(`${process.env.REACT_APP_SERVERURL}/login`, {
       method: "POST",
       body: JSON.stringify({ username, password }),
       headers: { "Content-Type": "application/json" },
-      credentials: "same-origin",
+      // credentials: "same-origin",
     });
     if (response.ok) {
-        response.json().then(userInfo => {
-            setUserInfo(userInfo);
-            setRedirect(true);
-        })
+      response.json().then((userInfo) => {
+        localStorage.setItem("userInfo", JSON.stringify(userInfo.token));
+        setUserInfo(userInfo.token);
+        setRedirect(true);
+      });
     } else {
       alert("login unsuccesful. wrong credentials");
     }
