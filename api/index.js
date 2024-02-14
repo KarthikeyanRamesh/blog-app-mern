@@ -19,6 +19,7 @@ app.use(
   cors({
     credentials: true,
     origin: [
+      "https://zerotoone.us.to",
       "https://mern-blog-app-lvl4.onrender.com",
       "http://localhost:3000",
     ],
@@ -85,7 +86,7 @@ app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
     summary,
     content,
     cover: newPath,
-    author: userInfoVal.id
+    author: userInfoVal.id,
   });
 
   res.json(postDoc);
