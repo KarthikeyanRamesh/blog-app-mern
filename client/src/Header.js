@@ -5,21 +5,30 @@ import { UserContext } from "./UserContext";
 export default function Header() {
     const {userInfo, setUserInfo} = useContext(UserContext);
     useEffect(() => {
-        fetch(`${process.env.REACT_APP_SERVERURL}/profile`, {
-            credentials: 'include'
-        }).then(response => {
-            response.json().then(user => {
-                setUserInfo(user);
-            });
-        });
+        // fetch(`${process.env.REACT_APP_SERVERURL}/profile`, {
+        //     // credentials: 'same-origin'
+        // }).then(response => {
+        //     response.json().then(user => {
+        //         setUserInfo(user);
+        //     });
+        // });
+        const localUserInfo = localStorage.getItem("userInfo");
+        if(localUserInfo) {
+            const obj = JSON.parse(localUserInfo)
+            if(obj && obj.username) {
+                setUserInfo(obj);
+            }
+        }
+        
     }, []);
 
     function logout() {
         fetch(`${process.env.REACT_APP_SERVERURL}/logout`, {
-            credentials: 'include',
+            credentials: 'same-origin',
             method: 'POST'
         })
         setUserInfo(null);
+        localStorage.setItem("userInfo", "");
     }
 
     const username = userInfo?.username;
