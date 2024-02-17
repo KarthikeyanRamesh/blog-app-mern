@@ -19,6 +19,7 @@ app.use(
   cors({
     credentials: true,
     origin: [
+      "https://zerotoone.us.to",
       "https://mern-blog-app-lvl4.onrender.com",
       "http://localhost:3000",
     ],
@@ -27,7 +28,6 @@ app.use(
 app.use(express.json());
 app.use(cookieParser());
 app.use("/uploads", express.static(__dirname + "/uploads"));
-app.set("trust proxy", 1);
 
 mongoose.connect(process.env.MONGODB_URI);
 
@@ -85,7 +85,7 @@ app.post("/post", uploadMiddleware.single("file"), async (req, res) => {
     summary,
     content,
     cover: newPath,
-    author: userInfoVal.id
+    author: userInfoVal.id,
   });
 
   res.json(postDoc);
@@ -106,17 +106,4 @@ app.get("/post/:id", async (req, res) => {
   res.json(postDoc);
 });
 
-app.get("/", (req, res) => {
-  res.json("hello world!");
-});
-
-app.get("/testendpoint", (req, res) => {
-  res.json("test get endpoint working fine");
-});
-
-app.listen(4000, () => {
-  console.log("running node server at http://localhost:4000");
-});
-
-// LnzXsZkDSXS1RMTc
-// mern_blog
+app.listen(4000);
