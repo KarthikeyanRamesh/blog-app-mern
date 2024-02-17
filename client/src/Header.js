@@ -34,7 +34,7 @@ export default function Header() {
 
   return (
     <>
-      <h5> Welcome {username} !!!</h5>
+      {username && <h5> Welcome {username} !!!</h5>}
       <header>
         <Link to="/" className="logo">
           MyBlog
