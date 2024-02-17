@@ -2,6 +2,7 @@ import { useState, useContext } from "react";
 import ReactQuill from "react-quill";
 import "react-quill/dist/quill.snow.css";
 import { UserContext } from "../UserContext";
+import { Navigate } from "react-router-dom";
 
 export default function CreatePost() {
   const [title, setTitle] = useState("");
@@ -9,6 +10,7 @@ export default function CreatePost() {
   const [content, setContent] = useState("");
   const [files, setFiles] = useState("");
   const { userInfo } = useContext(UserContext);
+  const [redirect, setRedirect] = useState(false);
 
   const modules = {
     toolbar: [
@@ -39,6 +41,18 @@ export default function CreatePost() {
     "image",
   ];
 
+  async function callPostService(data) {
+    try {
+      const response = fetch(`${process.env.REACT_APP_SERVERURL}/post`, {
+        method: "POST",
+        body: data,
+      });
+      setRedirect(true);
+    } catch (err) {
+      console.log(err);
+    }
+  }
+
   function createNewPost(event) {
     event.preventDefault();
 
@@ -51,17 +65,17 @@ export default function CreatePost() {
     data.set("author", userInfo.username);
 
     const localUserInfo = localStorage.getItem("userInfo");
-        if(localUserInfo) {
-            const obj = JSON.parse(localUserInfo)
-            if(obj && obj.username) {
-              data.set("userInfo", JSON.stringify(obj));
-            }
-        }
+    if (localUserInfo) {
+      const obj = JSON.parse(localUserInfo);
+      if (obj && obj.username) {
+        data.set("userInfo", JSON.stringify(obj));
+      }
+    }
+    callPostService(data);
+  }
 
-    fetch(`${process.env.REACT_APP_SERVERURL}/post`, {
-      method: "POST",
-      body: data,
-    });
+  if (redirect) {
+    return <Navigate to="/" />;
   }
 
   return (
